@@ -42,7 +42,7 @@ d3.csv("data.csv").then(function(healthData){
     //Question: does this make a new array? what does it do?
     //like, does it make it so we can refer to d.age later?
     healthData.forEach(function(d){
-        d.age = +d.hours;
+        d.age = +d.age;
     });
 
     //now do the same w/smoker column? 
@@ -52,8 +52,8 @@ d3.csv("data.csv").then(function(healthData){
     });
 
     //configure band scale for horizontal axis 
-    var xBandScale = d3.scaleBand()
-                    .domain(healthData.map(d=>d.age))
+    var xBandScale = d3.scaleLinear()
+                    .domain([25,d3.max(healthData, d=>d.age)])
                     //range-->viewing range, right?
                     .range([0, chartWidth]);
     
