@@ -36,7 +36,14 @@ d3.csv("data.csv").then(function(healthData){
     //print data to check it
     console.log(healthData);
 
-    //cast relevant parts of data to own arrays
+    //cast age data to number for each piece of the healthData
+    //Question: does this make a new array? what does it do?
+    healthData.forEach(function(d){
+        d.age = +d.hours;
+    });
+
+    //now do the same w/smoker column? 
+    //still need to find out what that means lol.
 
     //select scatter div to append svg
 
