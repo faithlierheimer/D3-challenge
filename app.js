@@ -60,13 +60,39 @@ d3.csv("data.csv").then(function(healthData){
         .domain([0, d3.max(healthData, d=> d.smokes)])
         .range([chartHeight, 0]);
 
+
     //now need variables made from d3 axis functions (right?)
     //that pass in scales as arguments, which actually makes
     //chart's axes. 
     //might need to change ticks later. 
     var bottomAxis = d3.axisBottom(xBandScale);
     var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
-    //code circles
+
+
+    //need two SVG group elements for chartGroup area,
+    //this is what actually makes the axes I think?
+    chartGroup.append("g")
+        .call(leftAxis);
+
+    chartGroup.append("g")
+        .attr("transform", `translate(0, ${chartHeight})`)
+        .call(bottomAxis);
+    //gonna need one svg circle per piece of healthData? 
+    //and band scales help position the circles on the chart? 
+
+    //do we select circle bc that's what we want? bc it's not in css
+    //do i need to add circle to css??
+    chartGroup.selectAll(".circle")
+        .data(healthData)
+        .enter()
+        .append("circle")
+        //i picked circle bc i don't think d3 has a scatterplot ?
+        .attr("class", "circle")
+        .attr("x", d=>xBandScale(d.age))
+        .attr("y", d=>yLinearScale(d.hours))
+        .attr("width", xBandScale.bandwidth())
+        .attr("height", d => chartHeight - yLinearScale(d.hours));
+
 
     //bind data to circles for scatterplot
 
@@ -76,4 +102,6 @@ d3.csv("data.csv").then(function(healthData){
 
     
     //populate axes w/numbers 
-})
+}).catch(function(error){
+    console.log(error);
+});
