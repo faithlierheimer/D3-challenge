@@ -5,6 +5,7 @@
 //REASON TO DO OTHER SIZES? -Nelson Q
 var svgWidth = 960;
 var svgHeight = 660;
+console.log(svgHeight);
 
 //define chart margins--again, reason to do other measurements?
 var chartMargin = {
@@ -16,12 +17,12 @@ var chartMargin = {
 
 //use above measurements to define chart area 
 var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
-var chartHeight = svgHeight = chartMargin.top - chartMargin.bottom;
+var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
 
 //select scatter div (shouldn't be body like in examples, right?)
 //as svg, set dimensions
 var svg = d3
-          .select("scatter")
+          .select("#scatter")
           .append("svg")
           .attr("height", svgHeight)
           .attr("width", svgWidth);
@@ -32,6 +33,7 @@ var svg = d3
 var chartGroup = svg.append("g")
                  .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
+//load health data
 d3.csv("data.csv").then(function(healthData){
     //print data to check it
     console.log(healthData);
@@ -65,6 +67,8 @@ d3.csv("data.csv").then(function(healthData){
     //that pass in scales as arguments, which actually makes
     //chart's axes. 
     //might need to change ticks later. 
+
+    //x axis showing up as NaNs, not sure how to explain? 
     var bottomAxis = d3.axisBottom(xBandScale);
     var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
 
@@ -88,20 +92,12 @@ d3.csv("data.csv").then(function(healthData){
         .append("circle")
         //i picked circle bc i don't think d3 has a scatterplot ?
         .attr("class", "circle")
+        //x is the one that keeps showing up as zero, everything else 
+        //looks right? 
         .attr("x", d=>xBandScale(d.age))
-        .attr("y", d=>yLinearScale(d.hours))
+        .attr("y", d=>yLinearScale(d.smokes))
         .attr("width", xBandScale.bandwidth())
-        .attr("height", d => chartHeight - yLinearScale(d.hours));
-
-
-    //bind data to circles for scatterplot
-
-    //code state abbrevs to each circle
-
-
-
-    
-    //populate axes w/numbers 
+        .attr("height", d => chartHeight - yLinearScale(d.smokes)); 
 }).catch(function(error){
     console.log(error);
 });
