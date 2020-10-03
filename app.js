@@ -114,7 +114,7 @@ circlesGroup.on("mouseover", function(d){
     toolTip.show(d, this);
 })
     .on("mouseout", function(d){
-        toolTip.hide(d);
+        toolTip.hide(d)
     });
 
 }).catch(function(error){
