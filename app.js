@@ -86,19 +86,50 @@ d3.csv("data.csv").then(function(healthData){
 
     //do we select circle bc that's what we want? bc it's not in css
     //do i need to add circle to css??
-    chartGroup.selectAll(".circle")
+    var circlesGroup = chartGroup.selectAll(".circle")
         .data(healthData)
         .enter()
         .append("circle")
-        //i picked circle bc i don't think d3 has a scatterplot ?
         .attr("class", "circle")
-        //x is the one that keeps showing up as zero, everything else 
-        //looks right? 
         .attr("cx", d=>xLinearScale(d.age))
         .attr("cy", d=>yLinearScale(d.smokes))
-        .attr("r", 3);
+        .attr("r", "10")
+        .attr("fill", "red")
+        .attr("stroke", "black")
         // .attr("width", xBandScale.bandwidth())
-        // .attr("height", d => chartHeight - yLinearScale(d.smokes)); 
+        // .attr("height", d => chartHeight - yLinearScale(d.smokes));
+        
+        //attempting to add tooltips 
+        //  var toolTip = d3.select('body')
+        //                 .append('div')
+        //                 .classed('tooltip', true);
+
+        //Need mouseover event listener to display tooltip
+//          circlesGroup.on("mouseover", function(d) {
+//                 toolTip.style("display", "block")
+//                     .html(`Test Data: <strong>${d.age}</strong>`)
+//                 .style('left', d3.event.pageX + 'px')
+//                 .style('top', d3.event.pageY + 'px');
+//             })
+//             .on("mouseout", function() {
+//                 toolTip.style("display", "none");
+//     });
+
+var toolTip = d3.tip()
+                .attr("class", "tooltip")
+                .offset([80, -60])
+                .html(function(d){
+                    return(`test`);
+                });
+chartGroup.call(toolTip);
+
+circlesGroup.on("mouseover", function(d){
+    toolTip.show(d, this);
+})
+    .on("mouseout", function(d){
+        toolTip.hide(d);
+    });
+
 }).catch(function(error){
     console.log(error);
 });
