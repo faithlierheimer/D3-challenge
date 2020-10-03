@@ -51,6 +51,12 @@ d3.csv("data.csv").then(function(healthData){
         d.smokes = +d.smokes;
     });
 
+    //states as an object i think, so we can print text later
+    // healthData.forEach(function(d){
+    //     d.state =+d.state;
+    //     console.log(d.state)
+    // });
+
     //configure band scale for horizontal axis 
     var xLinearScale = d3.scaleLinear()
                     .domain([30,d3.max(healthData, d=>d.age)])
@@ -94,32 +100,13 @@ d3.csv("data.csv").then(function(healthData){
         .attr("cx", d=>xLinearScale(d.age))
         .attr("cy", d=>yLinearScale(d.smokes))
         .attr("r", "10")
-        .attr("fill", "red")
+        .attr("fill", "gold")
         .attr("stroke", "black")
-        // .attr("width", xBandScale.bandwidth())
-        // .attr("height", d => chartHeight - yLinearScale(d.smokes));
-        
-        //attempting to add tooltips 
-        //  var toolTip = d3.select('body')
-        //                 .append('div')
-        //                 .classed('tooltip', true);
-
-        //Need mouseover event listener to display tooltip
-//          circlesGroup.on("mouseover", function(d) {
-//                 toolTip.style("display", "block")
-//                     .html(`Test Data: <strong>${d.age}</strong>`)
-//                 .style('left', d3.event.pageX + 'px')
-//                 .style('top', d3.event.pageY + 'px');
-//             })
-//             .on("mouseout", function() {
-//                 toolTip.style("display", "none");
-//     });
-
 var toolTip = d3.tip()
                 .attr("class", "tooltip")
                 .offset([80, -60])
                 .html(function(d){
-                    return(`Age: ${d.age}, Smoker: ${d.smokes}`);
+                    return(`Age: ${d.age}, Smoker: ${d.smokes}, State: ${d.state}`);
                 });
 chartGroup.call(toolTip);
 
