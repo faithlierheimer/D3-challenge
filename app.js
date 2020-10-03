@@ -119,7 +119,7 @@ var toolTip = d3.tip()
                 .attr("class", "tooltip")
                 .offset([80, -60])
                 .html(function(d){
-                    return(`test`);
+                    return(`Age: ${d.age}, Smoker: ${d.smokes}`);
                 });
 chartGroup.call(toolTip);
 
