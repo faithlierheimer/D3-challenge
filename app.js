@@ -52,8 +52,8 @@ d3.csv("data.csv").then(function(healthData){
     });
 
     //configure band scale for horizontal axis 
-    var xBandScale = d3.scaleLinear()
-                    .domain([25,d3.max(healthData, d=>d.age)])
+    var xLinearScale = d3.scaleLinear()
+                    .domain([30,d3.max(healthData, d=>d.age)])
                     //range-->viewing range, right?
                     .range([0, chartWidth]);
     
@@ -69,7 +69,7 @@ d3.csv("data.csv").then(function(healthData){
     //might need to change ticks later. 
 
     //x axis showing up as NaNs, not sure how to explain? 
-    var bottomAxis = d3.axisBottom(xBandScale);
+    var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
 
 
@@ -94,10 +94,11 @@ d3.csv("data.csv").then(function(healthData){
         .attr("class", "circle")
         //x is the one that keeps showing up as zero, everything else 
         //looks right? 
-        .attr("x", d=>xBandScale(d.age))
-        .attr("y", d=>yLinearScale(d.smokes))
-        .attr("width", xBandScale.bandwidth())
-        .attr("height", d => chartHeight - yLinearScale(d.smokes)); 
+        .attr("cx", d=>xLinearScale(d.age))
+        .attr("cy", d=>yLinearScale(d.smokes))
+        .attr("r", 3);
+        // .attr("width", xBandScale.bandwidth())
+        // .attr("height", d => chartHeight - yLinearScale(d.smokes)); 
 }).catch(function(error){
     console.log(error);
 });
