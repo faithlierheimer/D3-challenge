@@ -2,14 +2,12 @@
 //explores healthcare vs. poverty or smokers vs. age
 
 //step 1: define SVG area dimensions
-//REASON TO DO OTHER SIZES? -Nelson Q
 
-//NELSON Q: why can't i see the x axis at the moment????
 var svgWidth = 960;
 var svgHeight = 660;
 console.log(svgHeight);
 
-//define chart margins--again, reason to do other measurements?
+//define chart margins
 var chartMargin = {
     top: 30,
     right: 30,
@@ -21,7 +19,7 @@ var chartMargin = {
 var chartWidth = svgWidth - chartMargin.left - chartMargin.right;
 var chartHeight = svgHeight - chartMargin.top - chartMargin.bottom;
 
-//select scatter div (shouldn't be body like in examples, right?)
+//select scatter div 
 //as svg, set dimensions
 var svg = d3
           .select("#scatter")
@@ -36,12 +34,12 @@ var chartGroup = svg.append("g")
                  .attr("transform", `translate(${chartMargin.left}, ${chartMargin.top})`);
 
 
-//try to add more params for different data? 
+//coding switchable x axis  
 var chosenXAxis = "age";
 
-//update x-scale when tehy click axis label? 
+//update x-scale when they click axis label  
 function xScale(healthData, chosenXAxis){
-    //remake scales?
+    //remake scales
     var xLinearScale = d3.scaleLinear()
                     .domain([d3.min(healthData, d=>d[chosenXAxis]),
                     d3.max(healthData, d=>d[chosenXAxis])])
@@ -68,7 +66,7 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis){
     return circlesGroup;
 }
 
-//update circles w/different tooltip?
+//update circles w/different tooltip
 function updateToolTip(chosenXAxis, circlesGroup){
     var label;
 
@@ -105,12 +103,11 @@ d3.csv("data.csv").then(function(healthData, err){
     console.log(healthData);
 
     //cast age data to number for each piece of the healthData
-    //Question: does this make a new array? what does it do?
-    //like, does it make it so we can refer to d.age later?
     healthData.forEach(function(d){
         d.age = +d.age;
         d.smokes = +d.smokes;
         d.income = +d.income;
+        d.abbr = +d.abbr;
     });
 
     //xlinearscale fxn
@@ -124,8 +121,7 @@ d3.csv("data.csv").then(function(healthData, err){
     //axes functions 
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
-    //now do the same w/smoker column? 
-    //still need to find out what that means lol.
+  
    
     //append x axis
     var xAxis = chartGroup.append("g")
@@ -137,47 +133,7 @@ d3.csv("data.csv").then(function(healthData, err){
     chartGroup.append("g")
     .call(leftAxis);
 
-
-
-    //states as an object i think, so we can print text later
-    // healthData.forEach(function(d){
-    //     d.state =+d.state;
-    //     console.log(d.state)
-    // });
-
-    //configure band scale for horizontal axis 
-    // var xLinearScale = d3.scaleLinear()
-    //                 .domain([30,d3.max(healthData, d=>d.age)])
-    //                 //range-->viewing range, right?
-    //                 .range([0, chartWidth]);
     
-    //make linear scale for vertical axis 
-    // var yLinearScale = d3.scaleLinear()
-    //     .domain([0, d3.max(healthData, d=> d.smokes)])
-    //     .range([chartHeight, 0]);
-
-
-    //now need variables made from d3 axis functions (right?)
-    //that pass in scales as arguments, which actually makes
-    //chart's axes. 
-    //might need to change ticks later. 
-
-    //x axis showing up as NaNs, not sure how to explain? 
-    // var bottomAxis = d3.axisBottom(xLinearScale);
-    // var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
-
-
-    //need two SVG group elements for chartGroup area,
-    //this is what actually makes the axes I think?
-    // chartGroup.append("g")
-    //     .call(leftAxis);
-
-    // chartGroup.append("g")
-    //     .attr("transform", `translate(0, ${chartHeight})`)
-    //     .call(bottomAxis);
-    //gonna need one svg circle per piece of healthData? 
-    //and band scales help position the circles on the chart? 
-
     //do we select circle bc that's what we want? bc it's not in css
     //do i need to add circle to css??
     var circlesGroup = chartGroup.selectAll(".circle")
@@ -190,13 +146,6 @@ d3.csv("data.csv").then(function(healthData, err){
         .attr("r", "10")
         .attr("fill", "gold")
         .attr("stroke", "black");
-// var toolTip = d3.tip()
-//                 .attr("class", "tooltip")
-//                 .offset([80, -60])
-//                 .html(function(d){
-//                     return(`Age: ${d.age}, Smoker: ${d.smokes}, State: ${d.state}`);
-//                 });
-
 //group for both x axis labels
 var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${chartWidth/2}, ${chartHeight})`);
@@ -214,6 +163,7 @@ var incomeLabel = labelsGroup.append("text")
     .attr("value", "income")
     .text("Household Income (Median)")
     .classed("inactive", true);
+
 //append y axis
 chartGroup.append("text")
     .attr("transform", "rotate(-90)")
@@ -270,14 +220,6 @@ labelsGroup.selectAll("text")
     }
   }
 });
-// chartGroup.call(toolTip);
-
-// circlesGroup.on("mouseover", function(d){
-//     toolTip.show(d, this);
-// })
-//     .on("mouseout", function(d){
-//         toolTip.hide(d)
-//     });
 
 }).catch(function(error){
     console.log(error);
